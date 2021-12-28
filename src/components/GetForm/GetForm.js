@@ -141,71 +141,80 @@ const GetForm = () => {
                     Object.keys(formData).map((key) => {
                         if (formData[key].type === 'textarea') {
                             return (
-                                <div key={key}>
-                                    <label >{formData[key].title}</label>
-                                    <textarea name={key} required={formData[key].required} readOnly={formData[key].readonly}{...formData[key].html_attr} onChange={e => handleChange(e)} defaultValue={formData[key].value}></textarea>
+                                <div key={key} className='mb-3 row'>
+                                    <label className="col-sm-2 col-form-label">{formData[key].title}</label>
+                                    <div className="col-sm-10">
+                                        <textarea name={key} required={formData[key].required} readOnly={formData[key].readonly}{...formData[key].html_attr} onChange={e => handleChange(e)} defaultValue={formData[key].value}></textarea>
+                                    </div>
                                 </div>
                             )
                         } else if (formData[key].type === 'select') {
                             return (
-                                <div key={key}>
-                                    <label >{formData[key].title}</label>
-                                    <select name={key} required={formData[key].required} readOnly={formData[key].readonly} defaultValue={location.pathname === '/get_form' ? formData[key].default : formData[key].value} onChange={e => handleChange(e)}>
-                                        {
-                                            formData[key].options.map((option) => {
-                                                console.log(formData[key].default === option.key);
-                                                return <option key={option.key} value={option.key}>{option.label} </option>
-                                            })
-                                        }
-                                    </select>
+                                <div key={key} className='mb-3 row'>
+                                    <label className="col-sm-2 col-form-label">{formData[key].title}</label>
+                                    <div className="col-sm-10">
+                                        <select name={key} required={formData[key].required} readOnly={formData[key].readonly} defaultValue={location.pathname === '/get_form' ? formData[key].default : formData[key].value} onChange={e => handleChange(e)}>
+                                            {
+                                                formData[key].options.map((option) => {
+                                                    console.log(formData[key].default === option.key);
+                                                    return <option key={option.key} value={option.key}>{option.label} </option>
+                                                })
+                                            }
+                                        </select>
+                                    </div>
                                 </div>
                             )
                         } else if (formData[key].type === 'radio') {
                             return (
-                                <div key={key}>
-                                    <label >{formData[key].title}</label>
-                                    {
-                                        formData[key].options.map((option) => {
-                                            return (
-                                                <div key={option.key}>
-                                                    <input type="radio" name={key} value={option.key} required={formData[key].required} readOnly={formData[key].readonly} defaultChecked={location.pathname === '/get_form' ? formData[key].default === option.key : formData[key].value === option.key} onChange={e => handleChange(e)} />
-                                                    <label >{option.label}</label>
-                                                </div>
+                                <div key={key} className='mb-3 row'>
+                                    <label className="col-sm-2 col-form-label">{formData[key].title}</label>
+                                    <div className="col-sm-10">
+                                        {
+                                            formData[key].options.map((option) => {
+                                                return (
+                                                    <div key={option.key}>
+                                                        <input type="radio" name={key} value={option.key} required={formData[key].required} readOnly={formData[key].readonly} defaultChecked={location.pathname === '/get_form' ? formData[key].default === option.key : formData[key].value === option.key} onChange={e => handleChange(e)} />
+                                                        <label >{option.label}</label>
+                                                    </div>
 
-                                            )
-                                        })
-                                    }
+                                                )
+                                            })
+                                        }
+                                    </div>
                                 </div>
                             )
                         } else if (formData[key].type === 'repeater') {
                             return (
-                                <div key={key}>
-                                    <label >{formData[key].title}</label>
+                                <div key={key} className='mb-3 row'>
+                                    <label className="col-sm-2 col-form-label">{formData[key].title}</label>
+                                    <div className="col-sm-10">
 
-                                    {
-                                        // formData[key].repeater_fields.map((field) => {
-                                        formData[key].value.length === 0 && !formData[key].repeater_click ?
-                                            Object.keys(formData[key].repeater_fields).map((field) => {
-                                                return (
-                                                    <div key={field}>
-                                                        <label>{formData[key].repeater_fields[field].title}</label>
-                                                        <input type={formData[key].repeater_fields[field].type} name={`${key}[${field}]`} required={formData[key].repeater_fields[field].required} onChange={e => handleChange(e)} />
-                                                    </div>
-                                                )
-                                            })
-                                            :
-                                            handleRepeater(formData[key].value.length)
-                                    }
-                                    <button type="button" onClick={() => { handleRepeater(formData[key].value.length, key) }}>Add</button>
-
+                                        {
+                                            // formData[key].repeater_fields.map((field) => {
+                                            formData[key].value.length === 0 && !formData[key].repeater_click ?
+                                                Object.keys(formData[key].repeater_fields).map((field) => {
+                                                    return (
+                                                        <div key={field}>
+                                                            <label>{formData[key].repeater_fields[field].title}</label><br />
+                                                            <input type={formData[key].repeater_fields[field].type} name={`${key}[${field}]`} required={formData[key].repeater_fields[field].required} onChange={e => handleChange(e)} />
+                                                        </div>
+                                                    )
+                                                })
+                                                :
+                                                handleRepeater(formData[key].value.length)
+                                        }
+                                        <button type="button" onClick={() => { handleRepeater(formData[key].value.length, key) }}>+</button>
+                                    </div>
                                 </div>
                             )
                         }
                         else {
                             return (
-                                <div key={key}>
-                                    <label key={key}>{formData[key].title}</label>
-                                    <input type={formData[key].type} name={key} required={formData[key].required} readOnly={formData[key].readonly}{...formData[key].html_attr} onChange={e => handleChange(e)} defaultValue={formData[key].value} />
+                                <div key={key} className='mb-3 row'>
+                                    <label className="col-sm-2 col-form-label">{formData[key].title}</label>
+                                    <div className="col-sm-10">
+                                        <input type={formData[key].type} name={key} required={formData[key].required} readOnly={formData[key].readonly}{...formData[key].html_attr} onChange={e => handleChange(e)} defaultValue={formData[key].value} />
+                                    </div>
                                 </div>
                             )
                         }
