@@ -9,29 +9,26 @@ const List = () => {
     const [headers, setHeaders] = useState({});
     const [rows, setRows] = useState([]);
     const [ascOrder, setAscOrder] = useState(false);
+    // get headers from server
     useEffect(() => {
         axios.get('http://localhost/api/list.php')
             .then(res => {
                 setHeaders(res.data.data.headers[0]);
                 setRows(res.data.data.rows);
-                // console.log(res.data);
-                // console.log(data)
             })
     }, []);
+    // handle reorder
     const handleDragEnd = (e) => {
-        console.log(e)
         if (!e.destination) return;
         let tempData = Array.from(rows);
         let [source_data] = tempData.splice(e.source.index, 1);
         tempData.splice(e.destination.index, 0, source_data);
-        console.log(tempData);
         setRows(tempData);
         axios.get('http://localhost/api/reorder.php')
             .then(res => {
-                console.log(res.data);
-                // console.log(data)
             })
     };
+    // handle sort
     const handleSorting = (sortable, key, asc) => {
         if (sortable) {
             if (asc) {
@@ -46,6 +43,7 @@ const List = () => {
             setAscOrder(!asc);
         }
     }
+    // handle search
     const handleSearch = (e, key) => {
         setRows(rows.filter(row => {
             const cellData = row[key];

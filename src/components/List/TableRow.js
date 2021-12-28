@@ -16,7 +16,6 @@ const TableRow = ({ row, index, headers }) => {
                     {
                         Object.keys(headers).map((key) => {
                             if (row.hasOwnProperty(key) && headers[key].hidden === false) {
-                                console.log(headers[key])
                                 if (key === 'id') {
                                     return <td key={row[key]}><Link to={`/edit/${row[key]}`}>{row[key]} </Link>
                                     </td>

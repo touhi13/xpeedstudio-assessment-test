@@ -8,17 +8,18 @@ const GetForm = () => {
     const [error, setError] = useState([]);
     const location = useLocation();
     const [message, setMessage] = useState({});
+    // get form data
     useEffect(() => {
-        console.log(location.pathname);
+        // //console.log(location.pathname);
         const id = location.pathname.split('/').pop();
-        console.log(id);
+        // //console.log(id);
         let url = '';
         //check current location
         if (location.pathname === '/get_form') {
             url = `http://localhost/api/get_form.php`;
         } else {
             const id = location.pathname.split('/').pop();
-            console.log(id);
+            //console.log(id);
             url = `http://localhost/api/get_form.php?id=${id}`;
         }
         // fetching data
@@ -33,9 +34,9 @@ const GetForm = () => {
         // if(valueArr.length === 0){
         //    const newArr= formData[key].value.push({},{}) ;
         //    setFormData(formData);
-        // //    console.log(newArr);
-        //    console.log(formData);
-        // //    console.log(formData[key].value);
+        // //    //console.log(newArr);
+        //    //console.log(formData);
+        // //    //console.log(formData[key].value);
 
         // }else{
         //    const newArr= formData[key].value.push({});
@@ -46,19 +47,16 @@ const GetForm = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormValue(formValue => ({ ...formValue, [name]: value }));
-        console.log(formValue);
     }
     // handle submit form 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await handleValidation();
-        if (error.length === 0) {
-            console.log(error);
+        if (await handleValidation()) {
             axios.get('http://localhost/api/submit_form.php', formData)
                 .then(res => {
-                    console.log(res.data);
+                    //console.log(res.data);
                     if (error.length === 0) {
-                        console.log(res.data);
+                        //console.log(res.data);
                         setMessage(res.data);
                     }
                 })
@@ -67,60 +65,77 @@ const GetForm = () => {
 
     }
     // handle validation
-    const handleValidation = async () => {
+    const handleValidation =async () => {
+        let errorArr = [];
         for (let key in formValue) {
-            // console.log(formValue[key])
             const validator = formData[key]?.validate;
             if (validator !== undefined) {
-                console.log(validator)
                 if (validator.includes('|')) {
                     const validatorArr = validator.split('|');
                     for (let i = 0; i < validatorArr.length; i++) {
-                        console.log(validatorArr[i])
-                        await validation(validatorArr[i], key, formValue[key]);
+                        errorArr.push(validation(validatorArr[i], key, formValue[key]));
                     }
                 } else {
-                    await validation(validator, key, formValue[key]);
+                    errorArr.push(validation(validator, key, formValue[key]));
                 }
             }
         }
-        console.log(error);
-        return 1;
+        // filter null value
+        const filterArr = errorArr.filter(item => item !== null);
+        setError(filterArr);
+        if (filterArr.length === 0) {
+            return true;
+        } else {
+
+            return false;
+        }
     }
     // check validation
     const validation = (string, key, value) => {
         if (string.includes('only_letters')) {
-            console.log(value)
+            //console.log(value)
             const letters = /^[A-Za-z]+$/;
             if (!value.match(letters)) {
-                setError(error => ([...error, `${formData[key].title} must contain only letters`]));
-                return;
+                // setError(error => ([...error, `${formData[key].title} must contain only letters`]));
+                return `${formData[key].title} must contain only letters`;
+            }else{
+                return null
             }
 
         } else if (string.includes('number')) {
             const number = /^[0-9]+$/;
             if (!value.match(number)) {
-                setError(error => ([...error, `${formData[key].title} must contain only numbers`]));
+                // setError(error => ([...error, `${formData[key].title} must contain only numbers`]));
+                return `${formData[key].title} must contain only numbers`;
+            }else{
+                return null
             }
 
         } else if (string.includes('email')) {
             let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-            if (value.match(regexEmail)) {
-                return true;
-            } else {
-                setError(error => ([...error, 'Email is not valid']));
+            if (!value.match(regexEmail)) {
+                // setError(error => ([...error, 'Email is not valid']));
+                return 'Email is not valid';
 
+            }else{
+                return null
             }
         } else if (string.includes('max')) {
             const max = string.split('max')[1];
-            console.log(value.length);
+            //console.log(value.length);
             if (value.length > max) {
-                setError(error => ([...error, `${formData[key].title}'s maximum length is ${max}`]));
+                // setError(error => ([...error, `${formData[key].title}'s maximum length is ${max}`]));
+                return `${formData[key].title}'s maximum length is ${max}`;
+            }else{
+                return null
             }
         } else if (string.includes('min')) {
             const min = string.split('min')[1];
             if (value.length < min) {
-                setError(error => ([...error, `${formData[key].title}'s minimum length is ${min}`]));
+                // setError(error => ([...error, `${formData[key].title}'s minimum length is ${min}`]));
+                return `${formData[key].title}'s minimum length is ${min}`;
+            }else{
+                return null
             }
         }
     }
@@ -133,6 +148,7 @@ const GetForm = () => {
                     error.map((err, i) => {
                         return <p className="text-danger" key={i}>{err}</p>
                     })
+                    // console.log(error)
 
                 }
             </div>
@@ -165,7 +181,7 @@ const GetForm = () => {
                                         <select name={key} required={formData[key].required} readOnly={formData[key].readonly} defaultValue={location.pathname === '/get_form' ? formData[key].default : formData[key].value} onChange={e => handleChange(e)}>
                                             {
                                                 formData[key].options.map((option) => {
-                                                    console.log(formData[key].default === option.key);
+                                                    //console.log(formData[key].default === option.key);
                                                     return <option key={option.key} value={option.key}>{option.label} </option>
                                                 })
                                             }

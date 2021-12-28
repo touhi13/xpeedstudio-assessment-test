@@ -1,7 +1,6 @@
 import React from 'react';
 
 const TableHeader = ({ headers,handleSorting, ascOrder, handleSearch}) => {
-    // console.log(headers);
     const headerColumn = (header,key) => {
         if(header.hidden===false){
             return <th key= {header.title} onClick={()=>{handleSorting(header.sortable,key,ascOrder)}}>{header.title}</th>
