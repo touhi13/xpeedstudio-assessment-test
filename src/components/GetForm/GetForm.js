@@ -8,7 +8,7 @@ const GetForm = () => {
     const [error, setError] = useState([]);
     const location = useLocation();
     const [message, setMessage] = useState({});
-    const [repeater, setRepeater] = useState(0);
+    // const [repeater, setRepeater] = useState(0);
     // get form data
     useEffect(() => {
         const id = location.pathname.split('/').pop();
@@ -27,8 +27,7 @@ const GetForm = () => {
             })
     }, []);
 
-    const handleRepeater = (valueArr, key) => {
-        setRepeater(repeater + 1);
+    const handleRepeater = (key) => {
 
     }
     // set form input value
@@ -40,7 +39,7 @@ const GetForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError([]);
-        setMessage({}); 
+        setMessage({});
         if (await handleValidation()) {
             axios.get('http://localhost/api/submit_form.php', formData)
                 .then(res => {
@@ -83,7 +82,7 @@ const GetForm = () => {
     // check validation
     const validation = (string, key, value) => {
         if (string.includes('only_letters')) {
-            const letters =/^[a-zA-Z ]*$/;
+            const letters = /^[a-zA-Z ]*$/;
             if (!value.match(letters)) {
                 return `${formData[key].title} must contain only letters`;
             } else {
@@ -197,7 +196,7 @@ const GetForm = () => {
 
                                         {
                                             // formData[key].repeater_fields.map((field) => {
-                                            repeater === 0 ?
+                                            formData[key].repeater === undefined && formData[key].value.length === 0 ?
                                                 Object.keys(formData[key].repeater_fields).map((field) => {
                                                     return (
                                                         <div key={field}>
@@ -207,9 +206,9 @@ const GetForm = () => {
                                                     )
                                                 })
                                                 :
-                                                handleRepeater(formData[key].value.length)
+                                                handleRepeater(key)
                                         }
-                                        <button type="button" onClick={() => { handleRepeater(formData[key].value.length, key) }}>+</button>
+                                        <button type="button" onClick={() => { handleRepeater(key) }}>+</button>
                                     </div>
                                 </div>
                             )
