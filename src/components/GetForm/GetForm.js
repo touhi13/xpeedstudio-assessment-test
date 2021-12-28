@@ -85,6 +85,7 @@ const GetForm = () => {
             }
             console.log(error);
         }
+        return;
     }
     // check validation
     const validation = (string, key, value) => {
@@ -129,15 +130,28 @@ const GetForm = () => {
             <div>
                 {
                     // console.log(error)
-                    error.map((err, i) => {
+                    error.length && error.map((err, i) => {
                         return <p className="text-danger" key={i}>{err}</p>
                     })
+                    
                 }
             </div>
             <div>
                 {
-                    message.message ? <p className={message.status === 'success' ? 'text-success' : 'text-danger'
-                    }>{message.message}</p> : null
+                    // message.messages ? <p className={message.status === 'success' ? 'text-success' : 'text-danger'
+                    // }>{message.messages}</p> : null
+                    // console.log(message.message)
+                    // message.messages.map(msg => {
+                    //     return <p className={message.status === 'success' ? 'text-success' : 'text-danger'}>{msg}</p>
+                    // })
+                    // message.messages ? Object.keys(message.messages).map(key => {
+                    //     return <p className={message.status === 'success' ? 'text-success' : 'text-danger'}>{message[key]}</p>
+                    // })
+                    //     : null
+                    // console.log(message.messages)
+                    message.messages?.length && message.messages.map((msg) => {
+                        return <p className={message.status === 'success' ? 'text-success' : 'text-danger'}>{msg}</p>
+                    })
                 }
             </div>
             <form onSubmit={handleSubmit}>
