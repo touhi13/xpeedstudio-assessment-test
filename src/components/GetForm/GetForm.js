@@ -130,7 +130,7 @@ const GetForm = () => {
             <div>
                 {
                     // display validation error
-                    error.length && error.map((err, i) => {
+                    error.map((err, i) => {
                         return <p className="text-danger" key={i}>{err}</p>
                     })
                     
