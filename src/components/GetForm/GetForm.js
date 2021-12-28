@@ -146,6 +146,7 @@ const GetForm = () => {
             </div>
             <form onSubmit={handleSubmit}>
                 {
+                    // display form fields
                     Object.keys(formData).map((key) => {
                         if (formData[key].type === 'textarea') {
                             return (
