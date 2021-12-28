@@ -40,7 +40,7 @@ const GetForm = () => {
                 return (
                     <div key={field}>
                         <label>{formData[key].repeater_fields[field].title}</label><br />
-                        <input type={formData[key].repeater_fields[field].type} name={`${key}[${index}][${field}]`} required={formData[key].repeater_fields[field].required} onChange={e => handleChange(e)} defaultValue={formData[key].value[index][field]}/>
+                        <input type={formData[key].repeater_fields[field].type} name={`${key}[${index}][${field}]`} required={formData[key].repeater_fields[field].required} onChange={e => handleChange(e)} defaultValue={formData[key]?.value[index]?.[field]}/>
                     </div>
                 )
             }))
