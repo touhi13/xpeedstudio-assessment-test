@@ -8,7 +8,6 @@ const GetForm = () => {
     const [error, setError] = useState([]);
     const location = useLocation();
     const [message, setMessage] = useState({});
-    // const [repeater, setRepeater] = useState(0);
     // get form data
     useEffect(() => {
         const id = location.pathname.split('/').pop();
@@ -26,6 +25,7 @@ const GetForm = () => {
                 setFormData(res.data.data.fields[0]);
             })
     }, []);
+    // repeat input field
     const repeat = (key) => {
         const repeater_fields = []
         let r;
@@ -40,7 +40,7 @@ const GetForm = () => {
                 return (
                     <div key={field}>
                         <label>{formData[key].repeater_fields[field].title}</label><br />
-                        <input type={formData[key].repeater_fields[field].type} name={`${key}[${field}]`} required={formData[key].repeater_fields[field].required} onChange={e => handleChange(e)} defaultValue={formData[key].value[index][field]}/>
+                        <input type={formData[key].repeater_fields[field].type} name={`${key}[${index}][${field}]`} required={formData[key].repeater_fields[field].required} onChange={e => handleChange(e)} defaultValue={formData[key].value[index][field]}/>
                     </div>
                 )
             }))
@@ -48,6 +48,7 @@ const GetForm = () => {
         return repeater_fields;
 
     }
+    // handle repeat
     const handleRepeater = (key) => {
         const tempData = { ...formData };
         let r;
@@ -91,6 +92,7 @@ const GetForm = () => {
     // handle validation
     const handleValidation = async () => {
         let errorArr = [];
+        console.log(formValue);
         for (let key in formValue) {
             const validator = formData[key]?.validate;
             if (validator !== undefined) {
@@ -236,7 +238,7 @@ const GetForm = () => {
                                                     return (
                                                         <div key={field}>
                                                             <label>{formData[key].repeater_fields[field].title}</label><br />
-                                                            <input type={formData[key].repeater_fields[field].type} name={`${key}[${field}]`} required={formData[key].repeater_fields[field].required} onChange={e => handleChange(e)} />
+                                                            <input type={formData[key].repeater_fields[field].type} name={`${key}[0][${field}]`} required={formData[key].repeater_fields[field].required} onChange={e => handleChange(e)} />
                                                         </div>
                                                     )
                                                 })
@@ -260,9 +262,6 @@ const GetForm = () => {
                         }
                     })
 
-                }
-                {
-                    console.log(formData)
                 }
                 <button className='btn btn-primary' type="submit">Submit</button>
             </form>
