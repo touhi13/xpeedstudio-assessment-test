@@ -8,6 +8,7 @@ const GetForm = () => {
     const [error, setError] = useState([]);
     const location = useLocation();
     const [message, setMessage] = useState({});
+    const [repeater, setRepeater] = useState(0);
     // get form data
     useEffect(() => {
         const id = location.pathname.split('/').pop();
@@ -27,7 +28,7 @@ const GetForm = () => {
     }, []);
 
     const handleRepeater = (valueArr, key) => {
-
+        setRepeater(repeater + 1);
 
     }
     // set form input value
@@ -38,6 +39,8 @@ const GetForm = () => {
     // handle submit form 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError([]);
+        setMessage({}); 
         if (await handleValidation()) {
             axios.get('http://localhost/api/submit_form.php', formData)
                 .then(res => {
@@ -52,7 +55,7 @@ const GetForm = () => {
 
     }
     // handle validation
-    const handleValidation =async () => {
+    const handleValidation = async () => {
         let errorArr = [];
         for (let key in formValue) {
             const validator = formData[key]?.validate;
@@ -80,10 +83,10 @@ const GetForm = () => {
     // check validation
     const validation = (string, key, value) => {
         if (string.includes('only_letters')) {
-            const letters = /^[A-Za-z]+$/;
+            const letters =/^[a-zA-Z ]*$/;
             if (!value.match(letters)) {
                 return `${formData[key].title} must contain only letters`;
-            }else{
+            } else {
                 return null
             }
 
@@ -91,7 +94,7 @@ const GetForm = () => {
             const number = /^[0-9]+$/;
             if (!value.match(number)) {
                 return `${formData[key].title} must contain only numbers`;
-            }else{
+            } else {
                 return null
             }
 
@@ -100,21 +103,21 @@ const GetForm = () => {
             if (!value.match(regexEmail)) {
                 return 'Email is not valid';
 
-            }else{
+            } else {
                 return null
             }
         } else if (string.includes('max')) {
             const max = string.split('max')[1];
             if (value.length > max) {
                 return `${formData[key].title}'s maximum length is ${max}`;
-            }else{
+            } else {
                 return null
             }
         } else if (string.includes('min')) {
             const min = string.split('min')[1];
             if (value.length < min) {
                 return `${formData[key].title}'s minimum length is ${min}`;
-            }else{
+            } else {
                 return null
             }
         }
@@ -194,7 +197,7 @@ const GetForm = () => {
 
                                         {
                                             // formData[key].repeater_fields.map((field) => {
-                                            formData[key].value.length === 0 && !formData[key].repeater_click ?
+                                            repeater === 0 ?
                                                 Object.keys(formData[key].repeater_fields).map((field) => {
                                                     return (
                                                         <div key={field}>
