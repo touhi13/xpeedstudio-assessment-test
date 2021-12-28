@@ -13,6 +13,7 @@ const GetForm = () => {
         const id = location.pathname.split('/').pop();
         console.log(id);
         let url = '';
+        //check current location
         if (location.pathname === '/get_form') {
             url = `http://localhost/api/get_form.php`;
         } else {
@@ -20,11 +21,10 @@ const GetForm = () => {
             console.log(id);
             url = `http://localhost/api/get_form.php?id=${id}`;
         }
+        // fetching data
         axios.get(url)
             .then(res => {
                 setFormData(res.data.data.fields[0]);
-                console.log(res.data.data.fields[0]);
-                // console.log(data)
             })
     }, []);
 
@@ -42,14 +42,31 @@ const GetForm = () => {
 
         // }
     }
+    // set form input value
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormValue(formValue => ({ ...formValue, [name]: value }));
         console.log(formValue);
     }
-    const handleSubmit = (e) => {
-        // setFormData(prevState => (...prevState,));
+    // handle submit form 
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        await handleValidation();
+        if (error.length === 0) {
+            console.log(error);
+            axios.get('http://localhost/api/submit_form.php', formData)
+                .then(res => {
+                    console.log(res.data);
+                    if (error.length === 0) {
+                        console.log(res.data);
+                    }
+                })
+        }
+
+
+    }
+    // handle validation
+    const handleValidation = async () => {
         for (let key in formValue) {
             // console.log(formValue[key])
             const validator = formData[key]?.validate;
@@ -59,33 +76,29 @@ const GetForm = () => {
                     const validatorArr = validator.split('|');
                     for (let i = 0; i < validatorArr.length; i++) {
                         console.log(validatorArr[i])
-                        validation(validatorArr[i], key, formValue[key]);
+                        await validation(validatorArr[i], key, formValue[key]);
                     }
                 } else {
-                    validation(validator, key, formValue[key]);
+                    await validation(validator, key, formValue[key]);
                 }
             }
+            console.log(error);
         }
-        axios.get('http://localhost/api/submit_form.php', formData)
-            .then(res => {
-                // console.log(res.data.data.fields[0]);
-                console.log(res.data)
-            })
     }
-
+    // check validation
     const validation = (string, key, value) => {
         if (string.includes('only_letters')) {
             console.log(value)
             const letters = /^[A-Za-z]+$/;
             if (!value.match(letters)) {
-                setError(error => ([ ...error, `${formData[key].title} must contain only letters` ]));
+                setError(error => ([...error, `${formData[key].title} must contain only letters`]));
 
             }
 
         } else if (string.includes('number')) {
             const number = /^[0-9]+$/;
             if (!value.match(number)) {
-                setError(error => ([ ...error, `${formData[key].title} must contain only numbers` ]));
+                setError(error => ([...error, `${formData[key].title} must contain only numbers`]));
             }
 
         } else if (string.includes('email')) {
@@ -93,22 +106,22 @@ const GetForm = () => {
             if (value.match(regexEmail)) {
                 return true;
             } else {
-                setError(error => ([ ...error, 'Email is not valid' ]));
-     
+                setError(error => ([...error, 'Email is not valid']));
+
             }
         } else if (string.includes('max')) {
             const max = string.split('max')[1];
             if (value.length <= max) {
                 return true;
             } else {
-                setError(error => ([ ...error, `${formData[key].title}'s maximum length is ${max}` ]));
+                setError(error => ([...error, `${formData[key].title}'s maximum length is ${max}`]));
             }
         } else if (string.includes('min')) {
             const min = string.split('min')[1];
             if (value.length >= min) {
                 return true;
             } else {
-                setError(error => ([ ...error, `${formData[key].title}'s minimum length is ${min}` ]));
+                setError(error => ([...error, `${formData[key].title}'s minimum length is ${min}`]));
             }
         }
     }
@@ -119,7 +132,7 @@ const GetForm = () => {
                 {
                     // console.log(error)
                     error.map((err, i) => {
-                        return <p key={i}>{err}</p>
+                        return <p className="text-danger" key={i}>{err}</p>
                     })
                 }
             </div>
