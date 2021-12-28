@@ -83,9 +83,9 @@ const GetForm = () => {
                     await validation(validator, key, formValue[key]);
                 }
             }
-            console.log(error);
         }
-        return;
+        console.log(error);
+
     }
     // check validation
     const validation = (string, key, value) => {
@@ -129,7 +129,7 @@ const GetForm = () => {
         <div className="container">
             <div>
                 {
-                    // console.log(error)
+                    // display validation error
                     error.length && error.map((err, i) => {
                         return <p className="text-danger" key={i}>{err}</p>
                     })
@@ -138,17 +138,7 @@ const GetForm = () => {
             </div>
             <div>
                 {
-                    // message.messages ? <p className={message.status === 'success' ? 'text-success' : 'text-danger'
-                    // }>{message.messages}</p> : null
-                    // console.log(message.message)
-                    // message.messages.map(msg => {
-                    //     return <p className={message.status === 'success' ? 'text-success' : 'text-danger'}>{msg}</p>
-                    // })
-                    // message.messages ? Object.keys(message.messages).map(key => {
-                    //     return <p className={message.status === 'success' ? 'text-success' : 'text-danger'}>{message[key]}</p>
-                    // })
-                    //     : null
-                    // console.log(message.messages)
+                    // display submit message
                     message.messages?.length && message.messages.map((msg) => {
                         return <p className={message.status === 'success' ? 'text-success' : 'text-danger'}>{msg}</p>
                     })
