@@ -7,7 +7,7 @@ const GetForm = () => {
     const [formValue, setFormValue] = useState([]);
     const [error, setError] = useState([]);
     const location = useLocation();
-
+    const [message, setMessage] = useState({});
     useEffect(() => {
         console.log(location.pathname);
         const id = location.pathname.split('/').pop();
@@ -59,6 +59,7 @@ const GetForm = () => {
                     console.log(res.data);
                     if (error.length === 0) {
                         console.log(res.data);
+                        setMessage(res.data);
                     }
                 })
         }
@@ -92,7 +93,7 @@ const GetForm = () => {
             const letters = /^[A-Za-z]+$/;
             if (!value.match(letters)) {
                 setError(error => ([...error, `${formData[key].title} must contain only letters`]));
-
+                return;
             }
 
         } else if (string.includes('number')) {
@@ -111,9 +112,8 @@ const GetForm = () => {
             }
         } else if (string.includes('max')) {
             const max = string.split('max')[1];
-            if (value.length <= max) {
-                return true;
-            } else {
+            console.log(value.length);
+            if (value.length > max) {
                 setError(error => ([...error, `${formData[key].title}'s maximum length is ${max}`]));
             }
         } else if (string.includes('min')) {
@@ -127,13 +127,19 @@ const GetForm = () => {
     }
 
     return (
-        <>
+        <div className="container">
             <div>
                 {
                     // console.log(error)
                     error.map((err, i) => {
                         return <p className="text-danger" key={i}>{err}</p>
                     })
+                }
+            </div>
+            <div>
+                {
+                    message.message ? <p className={message.status === 'success' ? 'text-success' : 'text-danger'
+                    }>{message.message}</p> : null
                 }
             </div>
             <form onSubmit={handleSubmit}>
@@ -223,7 +229,7 @@ const GetForm = () => {
                 }
                 <button type="submit">Submit</button>
             </form>
-        </>
+        </div>
     );
 };
 
