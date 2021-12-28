@@ -55,7 +55,7 @@ const List = () => {
     return (
         <>
             <Link to='/get_form'>
-                <button>Get Form</button>
+                <button className="btn btn-primary">Get Form</button>
             </Link>
             <table className="table table-striped">
                 <thead>

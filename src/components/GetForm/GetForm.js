@@ -85,7 +85,7 @@ const GetForm = () => {
             }
         }
         console.log(error);
-
+        return 1;
     }
     // check validation
     const validation = (string, key, value) => {
@@ -133,7 +133,7 @@ const GetForm = () => {
                     error.map((err, i) => {
                         return <p className="text-danger" key={i}>{err}</p>
                     })
-                    
+
                 }
             </div>
             <div>
@@ -230,7 +230,7 @@ const GetForm = () => {
                     })
 
                 }
-                <button type="submit">Submit</button>
+                <button className='btn btn-primary' type="submit">Submit</button>
             </form>
         </div>
     );
