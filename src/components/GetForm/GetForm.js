@@ -26,9 +26,44 @@ const GetForm = () => {
                 setFormData(res.data.data.fields[0]);
             })
     }, []);
+    const repeat = (key) => {
+        const repeater_fields = []
+        let r;
+        if (formData[key]?.repeater === undefined) {
+            r = 0
+        } else {
+            r = formData[key].repeater;
+        }
+        const rLength = formData[key].value.length + r;
+        for (let index = 0; index < rLength; index++) {
+            repeater_fields.push(Object.keys(formData[key].repeater_fields).map((field) => {
+                return (
+                    <div key={field}>
+                        <label>{formData[key].repeater_fields[field].title}</label><br />
+                        <input type={formData[key].repeater_fields[field].type} name={`${key}[${field}]`} required={formData[key].repeater_fields[field].required} onChange={e => handleChange(e)} />
+                    </div>
+                )
+            }))
+        }
+        return repeater_fields;
 
+    }
     const handleRepeater = (key) => {
+        const tempData = { ...formData };
+        let r;
+        if (formData[key]?.repeater === undefined) {
+            r = 0
+        } else {
+            r = formData[key].repeater;
+        }
+        const rLength = formData[key].value.length + r;
+        if (rLength === 0) {
+            tempData[key].repeater = 2;
 
+        } else {
+            tempData[key].repeater = rLength + 1;
+        }
+        setFormData(tempData);
     }
     // set form input value
     const handleChange = (e) => {
@@ -206,7 +241,7 @@ const GetForm = () => {
                                                     )
                                                 })
                                                 :
-                                                handleRepeater(key)
+                                                repeat(key)
                                         }
                                         <button type="button" onClick={() => { handleRepeater(key) }}>+</button>
                                     </div>
@@ -225,6 +260,9 @@ const GetForm = () => {
                         }
                     })
 
+                }
+                {
+                    console.log(formData)
                 }
                 <button className='btn btn-primary' type="submit">Submit</button>
             </form>
