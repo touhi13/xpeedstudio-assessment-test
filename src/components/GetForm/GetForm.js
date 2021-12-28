@@ -35,6 +35,7 @@ const GetForm = () => {
             r = formData[key].repeater;
         }
         const rLength = formData[key].value.length + r;
+        console.log(formData[key].value.length,rLength);
         for (let index = 0; index < rLength; index++) {
             repeater_fields.push(Object.keys(formData[key].repeater_fields).map((field) => {
                 return (
@@ -57,12 +58,12 @@ const GetForm = () => {
         } else {
             r = formData[key].repeater;
         }
-        const rLength = formData[key].value.length + r;
-        if (rLength === 0) {
+        // const rLength = formData[key].value.length + r;
+        if (r === 0) {
             tempData[key].repeater = 2;
 
         } else {
-            tempData[key].repeater = rLength + 1;
+            tempData[key].repeater = r + 1;
         }
         setFormData(tempData);
     }
