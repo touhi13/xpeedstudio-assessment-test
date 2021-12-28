@@ -118,9 +118,7 @@ const GetForm = () => {
             }
         } else if (string.includes('min')) {
             const min = string.split('min')[1];
-            if (value.length >= min) {
-                return true;
-            } else {
+            if (value.length < min) {
                 setError(error => ([...error, `${formData[key].title}'s minimum length is ${min}`]));
             }
         }
