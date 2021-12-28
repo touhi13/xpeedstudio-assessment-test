@@ -34,14 +34,15 @@ const GetForm = () => {
         } else {
             r = formData[key].repeater;
         }
+
         const rLength = formData[key].value.length + r;
-        console.log(formData[key].value.length,rLength);
+        console.log(formData[key].value.length, r, rLength);
         for (let index = 0; index < rLength; index++) {
             repeater_fields.push(Object.keys(formData[key].repeater_fields).map((field) => {
                 return (
                     <div key={field}>
                         <label>{formData[key].repeater_fields[field].title}</label><br />
-                        <input type={formData[key].repeater_fields[field].type} name={`${key}[${index}][${field}]`} required={formData[key].repeater_fields[field].required} onChange={e => handleChange(e)} defaultValue={formData[key]?.value[index]?.[field]}/>
+                        <input type={formData[key].repeater_fields[field].type} name={`${key}[${index}][${field}]`} required={formData[key].repeater_fields[field].required} onChange={e => handleChange(e)} defaultValue={formData[key]?.value[index]?.[field]} />
                     </div>
                 )
             }))
@@ -54,13 +55,18 @@ const GetForm = () => {
         const tempData = { ...formData };
         let r;
         if (formData[key]?.repeater === undefined) {
+
             r = 0
         } else {
             r = formData[key].repeater;
         }
         // const rLength = formData[key].value.length + r;
         if (r === 0) {
-            tempData[key].repeater = 2;
+            if (formData[key].value.length === 0) {
+                tempData[key].repeater = 2;
+            } else {
+                tempData[key].repeater = 1;
+            }
 
         } else {
             tempData[key].repeater = r + 1;
